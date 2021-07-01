@@ -25,24 +25,23 @@ class TopDownCocoDataset(TopDownBaseDataset):
 
     COCO keypoint indexes::
 
-        0: 'rightAnkle',
-        1: 'rightKnee',
-        2: 'rightHip',
-        3: 'leftHip',
-        4: 'leftKnee',
-        5: 'leftAnkle',
-        6: 'pelvis',
-        7: 'thorax',
-        8: 'neck',
-        9: 'head',
-        10: 'rightWrist',
-        11: 'rightElbow',
-        12: 'rightShoulder',
-        13: 'leftShoulder',
-        14: 'leftElbow',
-        15: 'leftWrist',
-        16: 'hockeyGrip',
-        17: 'hockeyHeel'
+        0: 'nose',
+        1: 'left_eye',
+        2: 'right_eye',
+        3: 'left_ear',
+        4: 'right_ear',
+        5: 'left_shoulder',
+        6: 'right_shoulder',
+        7: 'left_elbow',
+        8: 'right_elbow',
+        9: 'left_wrist',
+        10: 'right_wrist',
+        11: 'left_hip',
+        12: 'right_hip',
+        13: 'left_knee',
+        14: 'right_knee',
+        15: 'left_ankle',
+        16: 'right_ankle'
 
     Args:
         ann_file (str): Path to the annotation file.
@@ -77,24 +76,17 @@ class TopDownCocoDataset(TopDownBaseDataset):
         self.oks_thr = data_cfg['oks_thr']
         self.vis_thr = data_cfg['vis_thr']
 
-        # 0-indexed
-        self.ann_info['flip_pairs'] = [
-            [0, 5],         # ankles
-            [1, 4],         # knees
-            [2, 3],         # hips
-            [10, 15],       # wrists
-            [11, 14],       # elbows
-            [12, 13],       # shoulders
-            ]
+        self.ann_info['flip_pairs'] = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10],
+                                       [11, 12], [13, 14], [15, 16]]
 
-        self.ann_info['upper_body_ids'] = (7, 8, 9, 10, 11, 12, 13, 14, 15)
-        self.ann_info['lower_body_ids'] = (0, 1, 2, 3, 4, 5, 6)
+        self.ann_info['upper_body_ids'] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        self.ann_info['lower_body_ids'] = (11, 12, 13, 14, 15, 16)
 
         self.ann_info['use_different_joint_weights'] = False
         self.ann_info['joint_weights'] = np.array(
             [
-                1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
-                1., 1., 1., 1.
+                1., 1., 1., 1., 1., 1., 1., 1.2, 1.2, 1.5, 1.5, 1., 1., 1.2,
+                1.2, 1.5, 1.5
             ],
             dtype=np.float32).reshape((self.ann_info['num_joints'], 1))
 
@@ -102,8 +94,7 @@ class TopDownCocoDataset(TopDownBaseDataset):
         # 'pycocotools/cocoeval.py#L523'
         self.sigmas = np.array([
             .26, .25, .25, .35, .35, .79, .79, .72, .72, .62, .62, 1.07, 1.07,
-            .87, .87, .89, .89,
-            .89,        #   added
+            .87, .87, .89, .89
         ]) / 10.0
 
         self.coco = COCO(ann_file)
@@ -121,7 +112,7 @@ class TopDownCocoDataset(TopDownBaseDataset):
         self.img_ids = self.coco.getImgIds()
         self.num_images = len(self.img_ids)
         self.id2name, self.name2id = self._get_mapping_id_name(self.coco.imgs)
-        self.dataset_name = 'harpet'
+        self.dataset_name = 'coco'
 
         self.db = self._get_db()
 
