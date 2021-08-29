@@ -27,12 +27,12 @@ log_config = dict(
     ])
 
 channel_cfg = dict(
-    dataset_joints=18,
+    dataset_joints=17,
     dataset_channel=[
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
     ],
     inference_channel=[
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
     ])
 
 data_cfg = dict(
@@ -84,7 +84,7 @@ model = dict(
     keypoint_head=dict(
         type='AEHigherResolutionHead',
         in_channels=32,
-        num_joints=18,
+        num_joints=17,
         tag_per_joint=True,
         extra=dict(final_conv_kernel=1, ),
         num_deconv_layers=1,
@@ -95,7 +95,7 @@ model = dict(
         with_ae_loss=[True, False],
         loss_keypoint=dict(
             type='MultiLossFactory',
-            num_joints=18,
+            num_joints=17,
             num_stages=2,
             ae_loss_type='exp',
             with_ae_loss=[True, False],
@@ -108,7 +108,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=10,
+        max_num_people=30,
         scale_factor=[1],
         with_heatmaps=[True, True],
         with_ae=[True, False],
@@ -174,24 +174,24 @@ test_pipeline = val_pipeline
 
 data_root = 'data/coco'
 data = dict(
-    samples_per_gpu=1,
-    workers_per_gpu=1,
+    samples_per_gpu=24,
+    workers_per_gpu=2,
     train=dict(
         type='BottomUpCocoDataset',
-        ann_file=f'{data_root}/annotations/harpet_train.json',
-        img_prefix=f'{data_root}/train/',
+        ann_file=f'{data_root}/annotations/person_keypoints_train2017.json',
+        img_prefix=f'{data_root}/train2017/',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpCocoDataset',
-        ann_file=f'{data_root}/annotations/harpet_val.json',
-        img_prefix=f'{data_root}/val/',
+        ann_file=f'{data_root}/annotations/person_keypoints_val2017.json',
+        img_prefix=f'{data_root}/val2017/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpCocoDataset',
-        ann_file=f'{data_root}/annotations/test_penalty_annot.json',
-        img_prefix=f'{data_root}/test_penalty/',
+        ann_file=f'{data_root}/annotations/person_keypoints_val2017.json',
+        img_prefix=f'{data_root}/val2017/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
 )
