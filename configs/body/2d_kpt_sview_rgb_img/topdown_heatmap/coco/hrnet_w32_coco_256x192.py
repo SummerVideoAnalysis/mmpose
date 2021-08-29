@@ -150,7 +150,7 @@ data = dict(
     samples_per_gpu=2,
     workers_per_gpu=1,
     val_dataloader=dict(samples_per_gpu=32),
-    test_dataloader=dict(samples_per_gpu=32),
+    test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type='TopDownCocoDataset',
         ann_file=f'{data_root}/annotations/harpet_train.json',
@@ -165,8 +165,8 @@ data = dict(
         pipeline=val_pipeline),
     test=dict(
         type='TopDownCocoDataset',
-        ann_file=f'{data_root}/annotations/harpet_test.json',
-        img_prefix=f'{data_root}/test/',
+        ann_file=f'{data_root}/annotations/2017-11-08-bos-nyr-national_020132.json',
+        img_prefix=f'{data_root}/2017-11-08-bos-nyr-national_020132/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
 )
